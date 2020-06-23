@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Users index page</title>
+    </head>
+    <body>
+        <h1>Users</h1>
+        <table>
+            <tr>
+                <th>FirstName</th>
+                <th>LastName</th>
+                <th>Age</th>
+                <th>Email</th>
+            </tr>
+            <tr>
+                <td>XXXX</td>
+                <td>XXXX</td>
+                <td>XXXX</td>
+                <td>XXXX</td>
+            </tr>
+        </table>
+    </body>
+</html>
+
+
+email = Rack::Auth::Basic::Request.new(request.env)
+if (email.provided?)
+  user_data = settings.user.sign_in(email.username)
+  if (user_data)
+    protected!(user_data)
+    session[:logged_user] = user_data[:Id]
+   return "You are in!"
+ end
+end
+return "No user with this email"

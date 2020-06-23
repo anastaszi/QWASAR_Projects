@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Users index page</title>
+    </head>
+    <body>
+        <h1>Users</h1>
+        <table>
+            <tr>
+                <th>FirstName</th>
+                <th>LastName</th>
+                <th>Age</th>
+                <th>Email</th>
+            </tr>
+            <% @all_users.each do |user| %>
+            <tr>
+                <td><%=  user['firstname'] %></td>
+                <td><%=  user['lastname'] %></td>
+                <td><%=  user['age'] %></td>
+                <td><%=  user['email'] %></td>
+            </tr>
+            <% end %>
+        </table>
+<br />
+
+<h2>Add new user</h2>
+
+<% if @error_sign_up %>
+  <p style="color: red;"><%= @error %></p>
+<% end %>
+
+<p>Please new user data</p>
+
+<form action="/users" method="POST">
+  <label for="firstname">First Name:</label><br>
+  <input type="text" id="firstname" name="firstname"><br>
+  <label for="lastname">Last Name:</label><br>
+  <input type="text" id="lastname" name="lastname"><br>
+  <label for="age">Age:</label><br>
+  <input type="text" id="age" name="age"><br>
+  <label for="email">Email:</label><br>
+  <input type="text" id="email" name="email"><br>
+  <label for="password">Password:</label><br>
+  <input type="text" id="password" name="password"><br><br>
+  <input type="submit" value="Submit">
+</form>
+
+<br />
+
+<% if @session %>
+
+<h2>Hello! Choose your action:</h2>
+
+<h3>Change password</h3>
+
+<form action="/users" method="PUT">
+  <label for="password">Type new password:</label><br>
+  <input type="password" id="password" name="password"><br><br>
+  <input type="submit" value="Submit">
+</form>
+
+<h3>Sign out</h3>
+
+<form action="/sign_out" method="PUT">
+  <input type="submit" value="SignOut">
+</form>
+
+<h3>Delete your data: </h3>
+
+<form action="/users" method="DELETE">
+  <input type="submit" value="Delete my data">
+</form>
+
+<% else %>
+
+  <h2>Sing In</h2>
+
+  <% if @error_log_in %>
+    <p style="color: red;">Wrong email or password. Try again!</p>
+  <% end %>
+
+  <p>Please provide your details</p>
+
+  <form action="/sign_in" method="POST">
+    <label for="email">Email:</label><br>
+    <input type="text" id="email" name="email"><br>
+    <label for="password">Password:</label><br>
+    <input type="password" id="password" name="password"><br><br>
+    <input type="submit" value="Submit">
+  </form>
+
+<% end %>
+    </body>
+</html>
