@@ -1,2 +1,8 @@
-.html linguist-detectable=false
-.css linguist-detectable=false
+my-css-is-easy-ii/* linguist-language=Html
+my-redis-class/* linguist-language=Ruby
+my-select-query/* linguist-language=Ruby
+my-sqlite/* linguist-language=ruby
+my_readline/* linguist-language=C
+my_blockchain/* linguist-language=C
+my-users-app/* linguist-language=Ruby
+ 
