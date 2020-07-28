@@ -1,7 +1,22 @@
 Rails.application.routes.draw do
+
+  resources :projects  do
+    member do
+      delete :delete_attachment
+    end
+    resources :members do
+      delete 'unsubscribe'
+    end
+    resources :topics do
+      resources :messages
+    end
+    resources :tasks do
+      resources :subtasks
+    end
+  end
+
   devise_for :users
-  get 'welcome/index'
 
   root 'welcome#index'
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+
 end
