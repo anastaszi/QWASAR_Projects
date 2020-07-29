@@ -3,7 +3,7 @@ class TasksController < ApplicationController
   before_action :set_task, only: [:edit, :update, :destroy]
 
   def new
-    @task = @topic.tasks.build
+    @task = @project.tasks.build
   end
 
   def index
