@@ -10,6 +10,19 @@
 
 #include "my_bsq.h"
 
+static unsigned int **create_matrix(int height, int width) {
+  unsigned int **matrix;
+  int row, col;
+
+  matrix = malloc(height * sizeof(int*));
+  for (row = 0; row < height; row++) {
+    matrix[row] = malloc(width * sizeof(int));
+    for (col = 0; col < width; col++)
+      matrix[row][col] = 0;
+  }
+  return matrix;
+}
+
 static void set_bit(unsigned int *a, int index, unsigned int bit){
   int elem, pos;
 
@@ -29,7 +42,7 @@ static int get_bit(unsigned int *a, int index) {
   return ((mask & a[elem]) != 0);
 }
 
-static void free_matrix(int **matrix, int rows) {
+static void free_matrix(unsigned int **matrix, int rows) {
   int i;
   if (matrix != NULL) {
     for (i = 0; i < rows; i++)
@@ -39,7 +52,7 @@ static void free_matrix(int **matrix, int rows) {
 }
 
 static void free_input(struct Matrix *this) {
-  free_matrix((int **)this->input, this->height);
+  free_matrix(this->input, this->height);
 }
 
 static void print(struct Matrix *this) {
@@ -67,43 +80,30 @@ static void print(struct Matrix *this) {
 }
 
 static void solve(struct Matrix *this) {
-  int **matrix = NULL;
-  int i, j;
+  unsigned int **matrix = NULL;
+  int row, col, current_value;
+
   if (this->width != 0 && this->input != NULL) {
-    matrix = malloc((this->height + 1) * sizeof(int*));
-    matrix[0] = malloc((this->width + 1) * sizeof(int));
-    for (i = 0; i < this->width + 1; i++)
-      matrix[0][i] = 0;
-    for (i = 1; i < (this->height + 1); i++) {
-      matrix[i] = malloc((this->width + 1) * sizeof(int));
-      matrix[i][0] = 0;
-      for (j = 1; j < (this->width + 1); j++) {
-        if (get_bit(this->input[i - 1], j - 1) != 0)
-          matrix[i][j] = 0;
-        else {
-          matrix[i][j] = my_min(matrix[i][j - 1],my_min(matrix[i - 1][j - 1], matrix[i - 1][j])) + 1;
-          if (matrix[i][j] > this->squire) {
-            this->squire = matrix[i][j];
-            this->x = j - this->squire;
-            this->y = i - this->squire;
+    matrix = create_matrix(this->height + 1, this->width + 1);
+    for (row = 1; row < (this->height + 1); row++) {
+      for (col = 1; col < (this->width + 1); col++) {
+        if (get_bit(this->input[row - 1], col - 1) == 0) {
+          current_value = my_min(matrix[row][col - 1],my_min(matrix[row - 1][col - 1], matrix[row - 1][col])) + 1;
+          matrix[row][col] = current_value;
+          if (current_value > this->squire) {
+            this->squire = current_value;
+            this->x = col - this->squire;
+            this->y = row - this->squire;
           }
         }
       }
     }
   }
-  /*
-  printf("(%d, %d) - width %d\n", this->x, this->y, this->squire);
-  for (i = 0; i < this->height + 1; i++) {
-      for (j = 0; j < this->width + 1; j++) {
-        printf("%d", matrix[i][j]);
-      }
-      printf("\n");
-  }*/
   free_matrix(matrix, this->height + 1);
 }
 
 static void fill(struct Matrix *this, char *file) {
-  int i, fd, num_of_ints, line = 0;
+  int col, fd, num_of_ints, line = 0;
   char* str = NULL;
   unsigned int **result = NULL;
 
@@ -116,15 +116,12 @@ static void fill(struct Matrix *this, char *file) {
     if (this->width == -1) {
       this->width = my_strlen(str);
       num_of_ints = this->width / 32 + 1;
-      result = malloc(this->height * sizeof(int*));
+      result = create_matrix(this->height, num_of_ints);
     }
-    result[line] = malloc(num_of_ints * sizeof(int));
-    for (i = 0; i < num_of_ints; i++)
-      result[line][i] = 0;
-    for (i = 0; i < this->width; i++) {
-      if (str[i] == OBSTACLE)
-        set_bit(result[line], i, 1);
-      else if (str[i] != EMPTY)
+    for (col = 0; col < this->width; col++) {
+      if (str[col] == OBSTACLE)
+        set_bit(result[line], col, 1);
+      else if (str[col] != EMPTY)
         this->width = 0; // catch bad character
     }
     line++;
@@ -133,10 +130,8 @@ static void fill(struct Matrix *this, char *file) {
 
   this->input = result;
   // catch bad input + less than needed number of rows
-  if (line != this->height || this->height == 0) {
+  if (line != this->height || this->height == 0)
     this->width = 0;
-    this->height = line;
-  }
   close(fd);
 }
 
