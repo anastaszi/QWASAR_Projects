@@ -8,11 +8,11 @@ The objective of this project is to find the largest possible square on a board 
 
 ### How to use
 
-1. Compile the program: run `make`\
-2. Create new map/board: run `./maps_generator [width] [height] [density] > board.txt`\
+1. Compile the program: run `make`
+2. Create new map/board: run `./maps_generator [width] [height] [density] > board.txt`
 maps_generator will generate a X by Y map with obstacles of D density and save it to file 'board.txt'
-3. Check the map: run `cat board.txt`\
+3. Check the map: run `cat board.txt`
 4. Run my_bsq: `./my_bsq board.txt`
 
 
-![Steps]()
+![Steps](https://github.com/anastaszi/QWASAR_Projects/blob/master/my_bsq/img/my_bsq_example.png)
