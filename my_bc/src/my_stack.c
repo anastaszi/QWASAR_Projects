@@ -50,7 +50,9 @@ static int empty(struct Stack *this) {
 }
 
 static void clean(struct Stack *this) {
-  (void) this;
+  //should all the nodes be cleaned?
+  free(this->array);
+  free(this->dataSize_array);
 }
 
 static struct Stack new(int size) {
