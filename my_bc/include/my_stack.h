@@ -11,9 +11,10 @@ struct Stack {
 
   void (* const increase_size)(struct Stack *this);
   void (* const add)(struct Stack *this, void *data, size_t dataSize);
-  void (* const pop)(struct Stack *this);
+  void (* const pop)(struct Stack *this, void (*del)(void *, size_t size));
   void *(* const top)(struct Stack *this);
   int (* const empty)(struct Stack *this);
+  void (* const clean)(struct Stack *this);
 };
 
 extern const struct StackClass {
